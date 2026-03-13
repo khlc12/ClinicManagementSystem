@@ -282,13 +282,22 @@ internal static class ClinicTheme
     {
         foreach (var fileName in fileNames.Where(name => !string.IsNullOrWhiteSpace(name)))
         {
-            if (!overlayImageCache.TryGetValue(fileName, out var image))
+            var needsReload = !overlayImageCache.TryGetValue(fileName, out var image) || image is null;
+            if (needsReload)
             {
                 var imagePath = Path.Combine(AppContext.BaseDirectory, "Assets", fileName);
                 if (!File.Exists(imagePath))
                 {
-                    overlayImageCache[fileName] = null;
-                    continue;
+                    var rootFallbackPath = Path.Combine(AppContext.BaseDirectory, fileName);
+                    if (File.Exists(rootFallbackPath))
+                    {
+                        imagePath = rootFallbackPath;
+                    }
+                    else
+                    {
+                        overlayImageCache[fileName] = null;
+                        continue;
+                    }
                 }
 
                 try
@@ -317,6 +326,11 @@ internal static class ClinicTheme
     public static Image? GetHeroOverlayImage()
     {
         return GetOverlayImage("hero-overlay.png");
+    }
+
+    public static Image? GetBrandLogoImage()
+    {
+        return GetOverlayImage("app-logo.png", "clinic-logo.png", "logo.png");
     }
 }
 

@@ -110,7 +110,7 @@ public partial class Form1 : Form
             BackColor = ClinicTheme.Accent
         };
         ClinicTheme.RoundControl(brandMark, 18);
-        var logoImage = ClinicTheme.GetOverlayImage("app-logo.png", "clinic-logo.png", "logo.png");
+        var logoImage = ClinicTheme.GetBrandLogoImage();
         if (logoImage is not null)
         {
             brandMark.BackColor = Color.FromArgb(236, 247, 248);
